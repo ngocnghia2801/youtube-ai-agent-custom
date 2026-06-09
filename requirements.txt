@@ -1,0 +1,10 @@
+agno
+youtube_transcript_api
+fastapi
+uvicorn
+python-dotenv
+requests
+sqlalchemy
+google-genai
+
+

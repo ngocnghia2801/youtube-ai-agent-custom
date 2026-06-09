@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube AI Agent - Premium Chat Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js Tomorrow Theme for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation & Controls -->
+        <aside class="sidebar" id="app-sidebar">
+            <div class="brand">
+                <div class="logo-container">
+                    <i class="fa-solid fa-play logo-icon"></i>
+                    <div class="logo-glow"></div>
+                </div>
+                <div>
+                    <h2>YouTube AI</h2>
+                    <span class="subtitle">Agent Workspace</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-scrollable">
+                <!-- Gemini API Key Section -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-key header-icon"></i>
+                        <span>API Configuration</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="gemini-key-input">Gemini API Key</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="gemini-key-input" placeholder="Enter Gemini API key..." autocomplete="off">
+                            <button class="toggle-password" id="toggle-key-visibility" type="button" title="Toggle visibility">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="input-note"><i class="fa-solid fa-shield-halved"></i> Stored locally in your browser</span>
+                    </div>
+                </div>
+
+                <!-- Video Loader Card -->
+                <div class="loader-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-link header-icon"></i>
+                        <span>Load YouTube Video</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="video-url-input">Video URL</label>
+                        <input type="text" id="video-url-input" placeholder="Paste YouTube link here..." autocomplete="off">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="btn-load-video">
+                        <span>Load Video</span>
+                        <i class="fa-solid fa-arrow-right btn-icon"></i>
+                    </button>
+                </div>
+
+                <!-- Video Preview Panel (Populated dynamically) -->
+                <div class="video-preview-card hidden" id="video-info-panel">
+                    <div class="card-header">
+                        <i class="fa-solid fa-circle-play header-icon active-glow"></i>
+                        <span>Active Video</span>
+                    </div>
+                    <div class="thumbnail-wrapper">
+                        <img id="video-thumbnail" src="" alt="Video Thumbnail">
+                        <div class="thumbnail-overlay">
+                            <span class="badge" id="video-id-badge">ID: XXXXXXXX</span>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <h4 id="video-title">YouTube Video Title</h4>
+                        <p id="video-author">Channel Name</p>
+                    </div>
+                    <div class="quick-prompts">
+                        <button class="btn btn-secondary btn-sm" id="btn-quick-summary">
+                            <i class="fa-solid fa-file-lines"></i> Summarize Video
+                        </button>
+                        <button class="btn btn-secondary btn-sm" id="btn-quick-insights">
+                            <i class="fa-solid fa-lightbulb"></i> Key Insights
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="divider"></div>
+                <div class="footer-links">
+                    <a href="https://github.com/pawan941394/Youtube-AI-Agent" target="_blank" title="Original Repository">
+                        <i class="fa-brands fa-github"></i> Source Code
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="connection-dot"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-outline btn-sm" id="btn-clear-chat">
+                        <i class="fa-solid fa-trash-can"></i> Clear History
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Display Content -->
+            <section class="chat-display" id="chat-display-area">
+                <!-- Welcome View (Default dashboard before loading a video) -->
+                <div class="welcome-view" id="welcome-dashboard">
+                    <div class="welcome-hero">
+                        <div class="hero-glow"></div>
+                        <i class="fa-brands fa-youtube hero-icon"></i>
+                        <h1>YouTube AI Agent</h1>
+                        <p class="hero-tagline">Transform long videos into instant insights, summaries, and Q&A conversations.</p>
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper color-red">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <h3>Instant Captions extraction</h3>
+                            <p>Automatically fetches English captions to analyze transcripts in real-time.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper color-purple">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <h3>Advanced Gemini Q&A</h3>
+                            <p>Powered by Gemini 2.0 to answer complex questions about context and statements.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper color-blue">
+                                <i class="fa-solid fa-message"></i>
+                            </div>
+                            <h3>Persistent Chat Memory</h3>
+                            <p>Saves conversational context in SQLite so the agent remembers previous details.</p>
+                        </div>
+                    </div>
+
+                    <div class="instructions-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> How to Get Started</h3>
+                        <ol>
+                            <li>Enter your <strong>Gemini API Key</strong> in the sidebar settings.</li>
+                            <li>Paste any public <strong>YouTube Video URL</strong> and click "Load Video".</li>
+                            <li>Use our quick buttons to summarize, or chat directly below to ask custom questions!</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Chat History Messages (Shown dynamically) -->
+                <div class="chat-history-container hidden" id="chat-messages-container">
+                    <!-- Dynamic chat messages go here -->
+                </div>
+            </section>
+
+            <!-- Chat Input Controls -->
+            <footer class="chat-input-container">
+                <form id="chat-form" class="chat-input-form">
+                    <input type="text" id="chat-text-input" placeholder="Type a message or ask a question..." disabled autocomplete="off">
+                    <button type="submit" id="btn-send-message" class="btn btn-primary btn-circle" disabled title="Send message">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div class="chat-input-footer">
+                    <span>Press Enter to send. Powered by Agno and Gemini 2.0.</span>
+                </div>
+            </footer>
+        </main>
+        
+    </div>
+
+    <!-- Scripts -->
+    <!-- Marked.js for parsing markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    
+    <!-- Application script -->
+    <script src="app.js"></script>
+</body>
+</html>
