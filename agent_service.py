@@ -30,8 +30,9 @@ def get_agent(api_key: str = None, session_id: str = "default_session"):
     
     # Return initialized Agno Agent
     return Agent(
-        model=Gemini(id="gemini-2.0-flash", api_key=key),
+        model=Gemini(id="gemini-3.5-flash", api_key=key),
         description="You are a YouTube agent. Obtain the captions of a YouTube video and answer questions.",
+
 
         session_id=session_id,
         db=db,
