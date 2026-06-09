@@ -80,7 +80,7 @@ def load_video(request: LoadVideoRequest):
                 video_id=video_id,
                 title=data.get("title", "YouTube Video"),
                 author=data.get("author_name", "Unknown Creator"),
-                thumbnail_url=data.get("thumbnail_url", f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg")
+                thumbnail_url=f"/api/thumbnail/{video_id}"
             )
         else:
             # Fallback metadata if oembed fails
@@ -88,7 +88,7 @@ def load_video(request: LoadVideoRequest):
                 video_id=video_id,
                 title=f"YouTube Video (ID: {video_id})",
                 author="YouTube Creator",
-                thumbnail_url=f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
+                thumbnail_url=f"/api/thumbnail/{video_id}"
             )
     except Exception as e:
         # Handle general errors (e.g. network timeout) and fallback
@@ -96,11 +96,40 @@ def load_video(request: LoadVideoRequest):
             video_id=video_id,
             title=f"YouTube Video (ID: {video_id})",
             author="YouTube Creator",
-            thumbnail_url=f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
+            thumbnail_url=f"/api/thumbnail/{video_id}"
         )
+
+from fastapi.responses import Response
+
+@app.get("/api/thumbnail/{video_id}")
+def get_thumbnail(video_id: str):
+    """
+    Proxy endpoint to fetch YouTube video thumbnail server-side.
+    This resolves issues with browser cross-origin blocks and ad-blockers.
+    """
+    # Try different YouTube thumbnail quality servers
+    urls = [
+        f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg",
+        f"https://img.youtube.com/vi/{video_id}/sddefault.jpg",
+        f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg",
+        f"https://img.youtube.com/vi/{video_id}/mqdefault.jpg",
+        f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+    ]
+    
+    for url in urls:
+        try:
+            res = requests.get(url, timeout=5)
+            if res.status_code == 200:
+                # Return the image response directly
+                return Response(content=res.content, media_type="image/jpeg")
+        except Exception:
+            continue
+            
+    raise HTTPException(status_code=404, detail="Thumbnail not found")
 
 @app.post("/api/chat", response_model=ChatResponse)
 def chat_endpoint(request: ChatRequest):
+
     """
     Endpoint to send queries to the Agno AI Agent.
     """
