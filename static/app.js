@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLoadVideo = document.getElementById('btn-load-video');
     
     const videoInfoPanel = document.getElementById('video-info-panel');
+    const videoThumbnailContainer = document.getElementById('video-thumbnail-container');
     const videoThumbnail = document.getElementById('video-thumbnail');
+    const videoPlayerOverlay = document.getElementById('video-player-overlay');
     const videoIdBadge = document.getElementById('video-id-badge');
     const videoTitle = document.getElementById('video-title');
     const videoAuthor = document.getElementById('video-author');
@@ -136,6 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Update Sidebar video panel
                 videoThumbnail.src = data.thumbnail_url;
+                videoPlayerOverlay.style.display = 'none';
+                videoPlayerOverlay.innerHTML = '';
                 videoIdBadge.textContent = `ID: ${currentVideoId}`;
                 videoTitle.textContent = data.title;
                 videoAuthor.textContent = data.author;
@@ -179,6 +183,13 @@ You can now ask questions about the video content, ask for a summary, or click t
     btnLoadVideo.addEventListener('click', loadVideo);
     videoUrlInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') loadVideo();
+    });
+
+    videoThumbnailContainer.addEventListener('click', () => {
+        if (currentVideoId && videoPlayerOverlay.style.display !== 'block') {
+            videoPlayerOverlay.style.display = 'block';
+            videoPlayerOverlay.innerHTML = `<iframe src="https://www.youtube.com/embed/${currentVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
     });
 
     // Helper to append messages to UI

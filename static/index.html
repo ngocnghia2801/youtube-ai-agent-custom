@@ -76,12 +76,18 @@
                         <i class="fa-solid fa-circle-play header-icon active-glow"></i>
                         <span>Active Video</span>
                     </div>
-                    <div class="thumbnail-wrapper">
+                    <div class="thumbnail-wrapper" id="video-thumbnail-container" title="Click to play video inline">
                         <img id="video-thumbnail" src="" alt="Video Thumbnail">
+                        <div class="play-button-overlay">
+                            <i class="fa-solid fa-play"></i>
+                        </div>
                         <div class="thumbnail-overlay">
                             <span class="badge" id="video-id-badge">ID: XXXXXXXX</span>
                         </div>
+                        <div id="video-player-overlay" class="video-player-overlay"></div>
                     </div>
+
+
                     <div class="video-details">
                         <h4 id="video-title">YouTube Video Title</h4>
                         <p id="video-author">Channel Name</p>
