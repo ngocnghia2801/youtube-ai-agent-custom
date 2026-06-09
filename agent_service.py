@@ -37,5 +37,5 @@ def get_agent(api_key: str = None, session_id: str = "default_session"):
         add_history_to_context=True,
         num_history_runs=20,
         tools=[YouTubeTools()],
-        show_tool_calls=True,
     )
+
