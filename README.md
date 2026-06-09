@@ -2,7 +2,12 @@
 
 This is a customized, high-fidelity Single-Page Application (SPA) that acts as an AI assistant for YouTube videos. It is built as a replacement for the default Streamlit interface to provide a much cleaner, responsive, and aesthetically premium user interface (inspired by modern Figma product designs).
 
+<div align="center">
+  <img src="images/giaodien.png" alt="YouTube AI Agent Custom UI" width="100%">
+</div>
+
 ---
+
 
 ## 🎨 **Features**
 *   **Figma-Inspired UI**: Built with HTML, Vanilla CSS, and modern JavaScript featuring glassmorphism elements, YouTube-red gradients, and smooth animations.
